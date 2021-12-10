@@ -1,0 +1,276 @@
+package chatApp;
+
+import java.awt.Image;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import java.awt.Color;
+import javax.swing.border.LineBorder;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import java.awt.Font;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class Client extends JFrame {
+
+	private JPanel contentPane;
+	private static JTextArea textArea;
+	private JTextField message;
+	static ServerSocket server;
+    static Socket client;
+    static BufferedReader br;
+    static PrintWriter out;
+    
+	public Client() {
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 390, 482);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBorder(new LineBorder(new Color(0, 0, 0), 1, true));
+		panel.setBackground(new Color(46, 139, 87));
+		panel.setBounds(0, 0, 374, 55);
+		contentPane.add(panel);
+		panel.setLayout(null);
+		
+		JLabel back = new JLabel("");
+		back.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+					
+					int yesOrNo=JOptionPane.showConfirmDialog(null,"Do you want to Close Connection with Server..?");
+					if(yesOrNo==0)
+					{
+					    dispose();
+					    client.close();
+						JOptionPane.showMessageDialog(null,"Connection Closed!");
+					}
+					
+				    
+				} catch (Exception e1) {
+					JOptionPane.showMessageDialog(null,"Connection Closed!");
+				}
+			}
+		});
+		back.setBounds(0, 11, 33, 33);
+		ImageIcon i=new ImageIcon("M:\\My Projects\\chatting-application-master\\Chatting Application\\Chat App\\src\\chatIcons\\back.png");
+		Image image=i.getImage();
+		Image imgScale=image.getScaledInstance(back.getWidth(),back.getHeight(),Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon=new ImageIcon(imgScale); 
+		back.setIcon(scaledIcon); 
+		panel.add(back);
+		
+		JLabel profile = new JLabel("");
+		profile.setBounds(32, 9, 39, 40);
+		ImageIcon i1=new ImageIcon("M:\\My Projects\\chatting-application-master\\Chatting Application\\Chat App\\src\\chatIcons\\afzal.jpeg");
+		Image image1=i1.getImage();
+		Image imgScale1=image1.getScaledInstance(profile.getWidth(),profile.getHeight(),Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon1=new ImageIcon(imgScale1); 
+		profile.setIcon(scaledIcon1); 
+		panel.add(profile);
+		
+		JLabel lblMurad = new JLabel(ClientStart.cName);
+		lblMurad.setForeground(new Color(0, 0, 0));
+		lblMurad.setFont(new Font("Arial Black", Font.BOLD, 20));
+		lblMurad.setBounds(81, 9, 93, 24);
+		panel.add(lblMurad);
+		
+		JLabel lblOnline = new JLabel("online");
+		lblOnline.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblOnline.setForeground(new Color(255, 255, 255));
+		lblOnline.setBackground(new Color(255, 255, 255));
+		lblOnline.setBounds(91, 35, 46, 14);
+		panel.add(lblOnline);
+		
+		JLabel phone = new JLabel("");
+		phone.setBounds(251, 11, 39, 33);
+		ImageIcon i2=new ImageIcon("M:\\My Projects\\chatting-application-master\\Chatting Application\\Chat App\\src\\chatIcons\\phoneCall.png");
+		Image image2=i2.getImage();
+		Image imgScale2=image2.getScaledInstance(phone.getWidth(),phone.getHeight(),Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon2=new ImageIcon(imgScale2); 
+		phone.setIcon(scaledIcon2); 
+		panel.add(phone);
+		
+		JLabel video = new JLabel("");
+		video.setBounds(300, 11, 39, 33);
+		ImageIcon i3=new ImageIcon("M:\\My Projects\\chatting-application-master\\Chatting Application\\Chat App\\src\\chatIcons\\videoCall.png");
+		Image image3=i3.getImage();
+		Image imgScale3=image3.getScaledInstance(video.getWidth(),video.getHeight(),Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon3=new ImageIcon(imgScale3); 
+		video.setIcon(scaledIcon3);
+		panel.add(video);
+		
+		JLabel option = new JLabel("");
+		option.setBounds(349, 15, 15, 29);
+		ImageIcon i4=new ImageIcon("M:\\My Projects\\chatting-application-master\\Chatting Application\\Chat App\\src\\chatIcons\\3icon.png");
+		Image image4=i4.getImage();
+		Image imgScale4=image4.getScaledInstance(option.getWidth(),option.getHeight(),Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon4=new ImageIcon(imgScale4); 
+		option.setIcon(scaledIcon4);
+		panel.add(option);
+		
+		JPanel panel_1 = new JPanel();
+		panel_1.setBounds(0, 403, 374, 40);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		
+		JLabel emoji = new JLabel("");
+		emoji.setBounds(0, 0, 39, 40);
+		ImageIcon i5=new ImageIcon("M:\\My Projects\\chatting-application-master\\Chatting Application\\Chat App\\src\\chatIcons\\emoji.jpeg");
+		Image image5=i5.getImage();
+		Image imgScale5=image5.getScaledInstance(emoji.getWidth(),emoji.getHeight(),Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon5=new ImageIcon(imgScale5); 
+		emoji.setIcon(scaledIcon5);
+		panel_1.add(emoji);
+		
+		message = new JTextField();
+		message.setBounds(40, 0, 242, 40);
+		panel_1.add(message);
+		message.setColumns(10);
+		
+		JLabel send = new JLabel("");
+		send.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				startWriting();
+			}
+		});
+		send.setBounds(322, 0, 52, 40);
+		ImageIcon i6=new ImageIcon("M:\\My Projects\\chatting-application-master\\Chatting Application\\Chat App\\src\\chatIcons\\send.jpeg");
+		Image image6=i6.getImage();
+		Image imgScale6=image6.getScaledInstance(send.getWidth(),send.getHeight(),Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon6=new ImageIcon(imgScale6); 
+		send.setIcon(scaledIcon6);
+		panel_1.add(send);
+		
+		JLabel documents = new JLabel("");
+		documents.setBounds(281, 0, 39, 40);
+		ImageIcon i7=new ImageIcon("M:\\My Projects\\chatting-application-master\\Chatting Application\\Chat App\\src\\chatIcons\\documents.jpeg");
+		Image image7=i7.getImage();
+		Image imgScale7=image7.getScaledInstance(documents.getWidth(),documents.getHeight(),Image.SCALE_SMOOTH);
+		ImageIcon scaledIcon7=new ImageIcon(imgScale7); 
+		documents.setIcon(scaledIcon7);
+		panel_1.add(documents);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(0, 55, 374, 348);
+		contentPane.add(scrollPane);
+		
+		textArea = new JTextArea();
+		textArea.setFont(new Font("SansSerif", Font.BOLD, 15));
+		scrollPane.setViewportView(textArea);
+		
+		startClient();
+		startReading();
+		
+	}
+	
+	public static void startClient()
+	{
+		try
+		{
+		 client=new Socket(ClientStart.ip,ClientStart.cpNo);
+	     br=new BufferedReader(new InputStreamReader(client.getInputStream()));
+	 	 out=new PrintWriter(client.getOutputStream());
+		
+ 	     
+		}
+		catch(Exception e)
+		{
+			JOptionPane.showMessageDialog(null,"Connection closed!");
+		}
+	}
+	
+	public  void startReading()
+    {
+		Runnable r1=()->{
+				
+    	try
+    	{		
+    		while(true)
+    		{
+    			String msg=br.readLine();
+    			if(!msg.isEmpty())
+    			{
+    				if(textArea.getText().isEmpty())
+    				{
+    					 Calendar cal = Calendar.getInstance();
+    				     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    					textArea.setText(msg+"\n"+sdf.format(cal.getTime()));
+    					msg="";	
+    				}
+    				
+    				else
+    				{
+    					 Calendar cal = Calendar.getInstance();
+    				     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    					textArea.setText(textArea.getText()+"\n"+msg+"\n"+sdf.format(cal.getTime()));
+    					msg="";
+    				}
+    			}
+    		}
+    	}
+    	catch(Exception e)
+    	{
+    		JOptionPane.showMessageDialog(null,"Connection closed!");
+    	}
+    		
+    	};
+    	
+    	new Thread(r1).start();
+    }
+    
+    public void startWriting()
+    {
+    	
+    		try
+        	{	
+    			String msg=message.getText();
+    			if(!msg.isEmpty())
+    			{
+    				if(textArea.getText().isEmpty())
+    				{
+    					Calendar cal = Calendar.getInstance();
+    				     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    					textArea.setText("\t\t"+msg+"\n\t\t\t"+sdf.format(cal.getTime()));
+    					message.setText("");
+    					out.println(msg);
+    					out.flush();
+    				}
+    				
+    				else
+    				{
+    					Calendar cal = Calendar.getInstance();
+    				     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+    					textArea.setText(textArea.getText()+"\n\t\t"+msg+"\n\t\t\t"+sdf.format(cal.getTime()));
+    					message.setText("");
+    					out.println(msg);
+    					out.flush();
+    				}
+    				
+    			}
+        	}
+        	catch(Exception e)
+        	{
+        		JOptionPane.showMessageDialog(null,"Connection closed!");
+        	}
+    
+    }
+}
