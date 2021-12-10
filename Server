@@ -86,7 +86,7 @@ public class Server extends JFrame {
 		profile.setIcon(scaledIcon1); 
 		panel.add(profile);
 		
-		JLabel lblMurad = new JLabel(ServerStart.sName);
+		JLabel lblshreyasamriddhi = new JLabel(ServerStart.sName);
 		lblMurad.setForeground(new Color(0, 0, 0));
 		lblMurad.setFont(new Font("Arial Black", Font.BOLD, 20));
 		lblMurad.setBounds(81, 9, 93, 24);
